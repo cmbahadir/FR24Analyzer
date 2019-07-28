@@ -10,7 +10,7 @@ class store(object):
             port = 6379
         self._redis_connection = redis.Redis(host=ip, port=port)
 
-    def _writeFirstOccurence(self, name, data):
+    def writeFirstOccurence(self, name, data):
         firstOccurence = data['time']
         firstKey = "first:" + name
         checkFirstOccurenceFlight = self._redis_connection.exists(firstKey)
@@ -19,16 +19,16 @@ class store(object):
         else:
             self._redis_connection.lpush(firstKey, firstOccurence)
 
-    def _writeToHash(self, name, data):
+    def writeToHash(self, name, data):
         flightKey = 'flight:' + name
         checkFlightExists = self._redis_connection.exists(flightKey)
         firstAltitude = data['alt']
-        if checkFlightExists == 1 and firstAltitude != 0:
+        if checkFlightExists == 1 or firstAltitude == 0:
             return
         else:
             self._redis_connection.hmset(flightKey, data)
 
-    def _writeLandTime(self, name, data):
+    def writeLandTime(self, name, data):
         flightKey = 'flight:' + name
         lastKey = 'last:' + name
         lastOccurence = data['time']
@@ -41,9 +41,9 @@ class store(object):
             return
     
     def writeToRedis(self, name, data):
-        self._writeFirstOccurence(name, data)
-        self._writeToHash(name, data)
-        self._writeLandTime(name, data)
+        self.writeFirstOccurence(name, data)
+        self.writeToHash(name, data)
+        self.writeLandTime(name, data)
     
 
     def __del__(self):
