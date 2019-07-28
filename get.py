@@ -4,7 +4,7 @@ from datetime import datetime
 import json
 from apscheduler.schedulers.background import BackgroundScheduler
 from math import sin, cos, sqrt, atan2, radians
-import toRedis
+from store import store
 
 def addTitleToFile():
     f = open('toIST.csv', 'a+')
@@ -16,7 +16,8 @@ def getLandingToIST():
     test_url = "https://data-live.flightradar24.com/zones/fcgi/feed.js?"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"}
-    payload = {"bounds": "41.55,40.61,28.19,29.47",
+    #TODO : Move bounds, to variables to configuration file.
+    payload = {"bounds": "41.39,40.44,28.69,29.68",
                "faa": 1,
                "satellite": 1,
                "mlat": 1,
@@ -29,7 +30,7 @@ def getLandingToIST():
                "maxage": 14400,
                "gliders": 1,
                "stats": 1,
-               "to": "IST"}
+               "to": "SAW"}
     response = requests.get(test_url, headers=headers, params=payload)
     responseJSON = response.json()
     readKeysFromJSONObject(responseJSON)
@@ -38,8 +39,10 @@ def getLandingToIST():
 
 def readKeysFromJSONObject(jsonObject):
     flightData = dict()
-    r = toRedis.connectToRedis()
-    istCoordinates = [41.259899, 28.7427334]
+    #TODO: Move redis connection configuration to configuration file
+    storeToRedis = store.store()
+    #Aiport coordinates TODO: Move to configuration file
+    airportCoordinates = [40.899876, 29.310093]
     f = open('toIST.csv', 'a+')
     for key in jsonObject:
             if key not in ["version", "full_count", "stats"]:
@@ -51,23 +54,24 @@ def readKeysFromJSONObject(jsonObject):
                 alt = value[4]
                 spd = value[5]
                 flight = value[0]
-                distanceToAirport = str(calcDistanceFromAirport(value[1], value[2], istCoordinates[0], istCoordinates[1]))
+                _now = datetime.now()
+                _time = time.mktime(_now.timetuple())
+                distanceToAirport = str(calcDistanceFromAirport(value[1], value[2], airportCoordinates[0], airportCoordinates[1]))
                 f.write(str(flight) + "," + str(lat) + "," + str(lon) + "," + str(hdg) +
-                        "," + str(alt) + "," + str(spd) + "," + str(datetime.now()) + "," + str(distanceToAirport) + "\n")
+                        "," + str(alt) + "," + str(spd) + "," + str(_time) + "," + str(distanceToAirport) + "\n")
 
                 # Write to REDIS                            
-                flightData['flight'] = flight
                 flightData['lat'] = lat
                 flightData['lon'] = lon
                 flightData['hdg'] = hdg
                 flightData['alt'] = alt
                 flightData['spd'] = spd
                 flightData['distance'] = distanceToAirport
-                flightData['time'] = str(datetime.now())
+                flightData['time'] = _time
 
                 #TODO: Add check to here if the same flight is exist on the REDIS
                 # do not add and check if the al value 0 than add it with an extension
-                toRedis.writeToRedis(r, flightData['flight'], flightData)
+                storeToRedis.writeToRedis(flight, flightData)
     f.close()
 
 
