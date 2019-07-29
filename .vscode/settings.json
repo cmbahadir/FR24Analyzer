@@ -1,8 +1,6 @@
 {
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true,
     "python.testing.pytestArgs": [
-        "FR24Analyzer/store/tests"
+        "FR24_Landing_Predictor"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,

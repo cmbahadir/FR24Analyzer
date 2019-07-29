@@ -3,3 +3,4 @@ toIST.csv
 toIST.xlsx
 __pycache__
 .pytest_cache
+.vscode
