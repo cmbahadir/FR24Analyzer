@@ -31,5 +31,7 @@ class Helper(object):
         f.write("Flight" + "," + "Lattitude" + "," + "Longtitude" + "," +
                 "Heading" + "," + "Altitude" + "," + "Speed" + "," + "Time" + "," +  "DistanceToAirport" "\n")
         f.close()
+
+
     
 

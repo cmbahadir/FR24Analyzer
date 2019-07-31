@@ -1,6 +1,6 @@
 {
     "python.testing.pytestArgs": [
-        "FR24_Landing_Predictor"
+        "FR24Analyzer/store/tests"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,
