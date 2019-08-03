@@ -5,7 +5,7 @@ import datetime
 class store(object):
     def __init__(self, ip=None, port=None):
         if ip is None:
-            ip = 'localhost'
+            ip = '172.18.0.2'
         if port is None:
             port = 6379
         self.__redis_connection = redis.Redis(host=ip, port=port)

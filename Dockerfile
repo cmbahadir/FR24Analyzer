@@ -6,7 +6,6 @@ FROM alpine:3.7
 # ############
 
 # explicitly set user/group IDs
-# RUN addgroup -r unprivileged --gid=999 && adduser -m -r -g unprivileged --uid=999 unprivileged
 RUN addgroup unprivileged -g 998 && adduser unprivileged -D -G unprivileged
 
 # grab gosu for easy step-down from root
@@ -146,28 +145,24 @@ RUN set -ex ;\
 
 # since we will be "always" mounting the volume, we can set this up
 ENTRYPOINT ["/usr/bin/dumb-init"]
-CMD ["python"]
 
 # #######
-# PROJECT
+# FR24 ANALYZER
 # #######
 
 ENV PYTHONUNBUFFERED 1
 
-# RUN mkdir -p /app /static /media /cache && chown -R unprivileged:unprivileged /media /cache
 WORKDIR /app
 
 COPY requirements.txt /requirements.txt
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN pip3 install --no-cache-dir -r /requirements.txt
 
-# ENV STATIC_ROOT /static
-# ENV MEDIA_DIR /media
-# ENV DATA_DIR /cache
-
 COPY . /app
-# RUN /app/docker-prepare.sh
+RUN chown -R unprivileged:unprivileged /app
 
 EXPOSE 8000
 VOLUME ["/app"]
+# CMD ["sh"]
+# CMD ["python", "get.py"]
 ENTRYPOINT ["/docker-entrypoint.sh"]

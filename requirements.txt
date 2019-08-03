@@ -1,7 +1,6 @@
 redis==3.2.1
 requests==2.18.4
 PyYAML==3.12
-pandas==0.24.2
-pandas==0.24.2
+
 
 
