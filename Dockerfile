@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.7
 
 
 # ############
@@ -41,6 +41,7 @@ RUN set -eux; \
 
 # PATHS
 ENV PYTHON_PATH=/usr/local/bin/ \
+    PYTHON_VERSION=3.6.7 \
     PATH="/usr/local/lib/python$PYTHON_VERSION/bin/:/usr/local/lib/pyenv/versions/$PYTHON_VERSION/bin:${PATH}" \
     # These are always installed.
     #   * dumb-init: a proper init system for containers, to reap zombie children
@@ -90,8 +91,6 @@ ENV PYTHON_PATH=/usr/local/bin/ \
       util-linux-dev \
       xz-dev \
       zlib-dev \
-      git \
-	  libressl2.7-libcrypto \
     "
 
 RUN set -ex ;\
@@ -101,6 +100,8 @@ RUN set -ex ;\
     # replacing default repositories with edge ones
     echo "http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/community" >> /etc/apk/repositories ;\
     echo "http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/main" >> /etc/apk/repositories ;\
+    # echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories ;\
+    # echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories ;\
     # Add the packages, with a CDN-breakage fallback if needed
     apk add --no-cache $PACKAGES || \
         (sed -i -e 's/dl-cdn/dl-4/g' /etc/apk/repositories && apk add --no-cache $PACKAGES) ;\
