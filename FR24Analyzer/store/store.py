@@ -93,7 +93,7 @@ class PostGreSQL():
             postgres_ip = '127.0.0.1'
         if postgres_port is None:
             postgres_port = 5432
-        self.__postgresql_connection = psycopg2.connect(database="fr24", user="cmb", password="postgres.123")
+        self.__postgresql_connection = psycopg2.connect(host=postgres_ip, port=postgres_port, database="fr24", user="cmb", password="postgres.123")
         self.__postgresql_cursor = self.__postgresql_connection.cursor()
         self.__postgresql_cursor.execute("CREATE TABLE IF NOT EXISTS SAW (Flight varchar, Lat real,Lon real, Hdg real, Speed real, Duration real, Distance real);");
         self.__postgresql_connection.commit()

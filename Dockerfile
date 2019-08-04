@@ -158,7 +158,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 COPY requirements.txt /requirements.txt
-COPY /docker-entrypoint/docker-entrypoint.sh /docker-entrypoint.sh
+COPY /docker-entrypoint-initdb.d/docker-entrypoint.sh /docker-entrypoint.sh
 RUN pip3 install --no-cache-dir -r /requirements.txt
 
 COPY . /app
@@ -166,6 +166,5 @@ RUN chown -R unprivileged:unprivileged /app
 
 EXPOSE 8000
 VOLUME ["/app"]
-# CMD ["sh"]
-# CMD ["python", "get.py"]
+CMD ["sh"]
 ENTRYPOINT ["/docker-entrypoint.sh"]
