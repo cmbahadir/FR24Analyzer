@@ -52,6 +52,7 @@ ENV PYTHON_PATH=/usr/local/bin/ \
     #   * git: to ease up clones of repos
     #   * ca-certificates: for SSL verification during Pip and easy_install
     PACKAGES="\
+      python3-dev \
       dumb-init \
       musl \
       libc6-compat \
@@ -63,7 +64,9 @@ ENV PYTHON_PATH=/usr/local/bin/ \
       libssl1.0 \
       libffi-dev \
       tzdata \
+      postgresql-dev \
     " \
+
     # PACKAGES needed to built python
     PYTHON_BUILD_PACKAGES="\
       bzip2-dev \
@@ -155,7 +158,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 COPY requirements.txt /requirements.txt
-COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY /docker-entrypoint/docker-entrypoint.sh /docker-entrypoint.sh
 RUN pip3 install --no-cache-dir -r /requirements.txt
 
 COPY . /app

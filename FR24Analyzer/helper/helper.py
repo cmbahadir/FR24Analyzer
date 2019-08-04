@@ -10,6 +10,10 @@ class Helper(object):
         configParameters["airportName"] = config["airportName"]
         configParameters["airportLat"] = config["airportLat"]
         configParameters["airportLon"] = config["airportLon"]
+        configParameters["redis_ip"] = config["redis_ip"]
+        configParameters["redis_port"] = config["redis_port"]
+        configParameters["postgres_ip"] = config["postgres_ip"]
+        configParameters["postgres_port"] = config["postgres_port"]
         return configParameters
 
     def calcDistanceFromAirport(self, latPlane, lonPlane, latAirport, lonAirport):

@@ -21,6 +21,10 @@ class FR24Analyzer(object):
         self.airportName = configParameters["airportName"]
         self.airportLat = configParameters["airportLat"]
         self.airportLon = configParameters["airportLon"]
+        self.redis_ip = configParameters["redis_ip"]
+        self.redis_port = configParameters["redis_port"]
+        self.postgres_ip = configParameters["postgres_ip"]
+        self.postgres_port = configParameters["postgres_port"]
         self._url = "https://data-live.flightradar24.com/zones/fcgi/feed.js?"
         self._headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"}
@@ -51,7 +55,8 @@ class FR24Analyzer(object):
     def _readKeysFromJSONObject(self, jsonObject):
         flightData = dict()
         #TODO: Move redis connection configuration to configuration file
-        redisInstance = store.store()
+        redisInstance = store.store(self.redis_ip, self.redis_port,
+                                    self.postgres_ip, self.postgres_port)
         airportCoordinates = [self.airportLat, self.airportLon]
         f = open(self.logFile, 'a+')
         for key in jsonObject:

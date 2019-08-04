@@ -1,20 +1,25 @@
 import redis
 import datetime
+import psycopg2
 
 
 class store(object):
-    def __init__(self, ip=None, port=None):
-        if ip is None:
-            ip = '172.18.0.2'
-        if port is None:
-            port = 6379
-        self.__redis_connection = redis.Redis(host=ip, port=port)
+    def __init__(self, redis_ip=None, redis_port=None,
+                 postgres_ip=None, postgres_port=None):
+        if redis_ip is None:
+            redis_ip = '127.0.0.1'
+        if redis_port is None:
+            redis_port = 6379
+        self.__redis_connection = redis.Redis(host=redis_ip, port=redis_port)
+        self.__postgres_connection = PostGreSQL(postgres_ip=postgres_ip, postgres_port=postgres_port)
 
     def writeFirstOccurence(self, name, data):
         firstOccurence = data['time']
         firstKey = "first:" + name
+        flightKey = "flight:" + name
         checkFirstOccurenceFlight = self.__redis_connection.exists(firstKey)
-        if checkFirstOccurenceFlight == 1:
+        checkFlightExistance = self.__redis_connection.exists(flightKey)
+        if checkFirstOccurenceFlight == 1 or checkFlightExistance == 0:
             return
         else:
             self.__redis_connection.lpush(firstKey, firstOccurence)
@@ -60,10 +65,17 @@ class store(object):
             calculatedDuration = lastOccurence - firstOccurenceTime_Float
             self.__redis_connection.hset(flightKey, 'time', calculatedDuration)
             self.__redis_connection.hset(flightKey, 'isLanded', 1)
-            # TODO: After the plane is landed first: and last: keys can be deleted.
-            # TODO: Move the flight:* hashes to a permenant DB (postgreSQL)
+            flightDict = self.__redis_connection.hgetall(flightKey)
+            flightDict["key"] = name
+            self.__postgres_connection.writeToDB(flightDict)
+
+            #Delete the keys for the landed plane
+            self.__redis_connection.delete(flightKey)
+            self.__redis_connection.delete(lastKey)
+            self.__redis_connection.delete("first:" + name)
         else:
             return
+
     
     def __convertByteToFloat(self, byteData):
         stringData = byteData.decode('utf-8')
@@ -74,3 +86,34 @@ class store(object):
         return
         #No need to delete the redis instance since it is already deleted
         #When got out of scope by redis library.
+
+class PostGreSQL():
+    def __init__(self, postgres_ip='localhost', postgres_port=5432):
+        if postgres_ip is None:
+            postgres_ip = '127.0.0.1'
+        if postgres_port is None:
+            postgres_port = 5432
+        self.__postgresql_connection = psycopg2.connect(database="fr24", user="cmb", password="postgres.123")
+        self.__postgresql_cursor = self.__postgresql_connection.cursor()
+        self.__postgresql_cursor.execute("CREATE TABLE IF NOT EXISTS SAW (Flight varchar, Lat real,Lon real, Hdg real, Speed real, Duration real, Distance real);");
+        self.__postgresql_connection.commit()
+    
+    def __del__(self):
+        self.__postgresql_cursor.close()
+        self.__postgresql_connection.close()
+
+    def writeToDB(self, dataDict):
+        self.__postgresql_cursor.execute(
+            """
+            INSERT INTO SAW (Flight, Lat, Lon, Hdg, Speed, Duration, Distance)
+            VALUES (%(key)s, %(lat)s, %(lon)s, %(hdg)s, %(spd)s, %(time)s, %(distance)s);
+            """, {  "key" : dataDict['key'], 
+                    "lat" : float(dataDict[b'lat'].decode('utf-8')), 
+                    "lon" : float(dataDict[b'lon'].decode('utf-8')),
+                    "hdg" : float(dataDict[b'hdg'].decode('utf-8')),
+                    "spd" : float(dataDict[b'spd'].decode('utf-8')),
+                    "time": float(dataDict[b'time'].decode('utf-8')),
+                    "distance": float(dataDict[b'distance'].decode('utf-8'))
+                 })
+        self.__postgresql_connection.commit()
+
