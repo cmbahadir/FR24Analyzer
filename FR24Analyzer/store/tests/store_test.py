@@ -1,11 +1,14 @@
 from FR24Analyzer.store import store as st
 import redis
 import pytest
+import psycopg2
 
 class Test_Store(object):
     def setup_method(self):
         self.storeInstance = st.store()
         self.redis_Test = redis.Redis(host='localhost', port=6379)
+        self.postgres_Test_conn = psycopg2.connect(host='localhost', port=5432, database='fr24', user='cmb', password='postgres.123')
+        self.postgres_Test_cursor = self.postgres_Test_conn.cursor()
 
     # def teardown_method(self):
     #     self.redis_Test.flushall()
@@ -59,9 +62,7 @@ class Test_Store(object):
         self.storeInstance.writeFirstOccurence(test_flight, test_flight_dic_approaching)
         self.storeInstance.writeLandTime(test_flight, test_flight_dic_landing)
         self.storeInstance.updateTheHash(test_flight, test_flight_dic_landing)
-        isLandedKey = self.redis_Test.hget('flight:4BAAA10', 'isLanded')
-        approachTime = self.redis_Test.hget('flight:4BAAA10', 'time')
-        check_isLanded = float(isLandedKey.decode('utf-8')) == 1
-        check_approachTime = float(approachTime.decode('utf-8')) == 100.9
-        assert check_approachTime and check_isLanded
+        self.postgres_Test_cursor.execute("select * from saw where flight='4BAAA10';")
+        fetchedFlight = self.postgres_Test_cursor.fetchone()
+        assert fetchedFlight[0] == test_flight
 
