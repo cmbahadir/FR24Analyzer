@@ -95,7 +95,7 @@ class PostGreSQL():
             postgres_port = 5432
         self.__postgresql_connection = psycopg2.connect(host=postgres_ip, port=postgres_port, database="fr24", user="cmb", password="postgres.123")
         self.__postgresql_cursor = self.__postgresql_connection.cursor()
-        self.__postgresql_cursor.execute("CREATE TABLE IF NOT EXISTS SAW (Flight varchar, Lat real,Lon real, Hdg real, Speed real, Duration real, Distance real);")
+        self.__postgresql_cursor.execute("CREATE TABLE IF NOT EXISTS SAW (Flight varchar, Lat real,Lon real, Hdg real, Altitude real, Speed real, Duration real, Distance real);")
         self.__postgresql_connection.commit()
     
     def __del__(self):
@@ -105,12 +105,13 @@ class PostGreSQL():
     def writeToDB(self, dataDict):
         self.__postgresql_cursor.execute(
             """
-            INSERT INTO SAW (Flight, Lat, Lon, Hdg, Speed, Duration, Distance)
-            VALUES (%(key)s, %(lat)s, %(lon)s, %(hdg)s, %(spd)s, %(time)s, %(distance)s);
+            INSERT INTO SAW (Flight, Lat, Lon, Hdg, Altitude, Speed, Duration, Distance)
+            VALUES (%(key)s, %(lat)s, %(lon)s, %(hdg)s, %(alt)s, %(spd)s, %(time)s, %(distance)s);
             """, {  "key" : dataDict['key'], 
                     "lat" : float(dataDict[b'lat'].decode('utf-8')), 
                     "lon" : float(dataDict[b'lon'].decode('utf-8')),
                     "hdg" : float(dataDict[b'hdg'].decode('utf-8')),
+                    "alt" : float(dataDict[b'alt'].decode('utf-8')),
                     "spd" : float(dataDict[b'spd'].decode('utf-8')),
                     "time": float(dataDict[b'time'].decode('utf-8')),
                     "distance": float(dataDict[b'distance'].decode('utf-8'))
