@@ -2,7 +2,7 @@ bounds : "41.39,40.44,28.69,29.68"
 airportName : "SAW"
 airportLat : 40.899876
 airportLon : 29.310093
-redis_ip : 172.18.0.3
+redis_ip : 127.0.0.1
 redis_port : 6379
-postgres_ip : 172.18.0.2
+postgres_ip : 127.0.0.1
 postgres_port : 5432
