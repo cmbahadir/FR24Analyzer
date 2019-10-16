@@ -1,5 +1,7 @@
 from FR24Analyzer import FR24Analyzer
+# from FR24Analyzer.fit import fit
 import time
+
 
 # from apscheduler.schedulers.background import BackgroundScheduler
 # def gatherResults():
@@ -10,6 +12,8 @@ import time
 
 if __name__ == "__main__":
     analyzer = FR24Analyzer.FR24Analyzer()
+    # fitter = fit.Fit()
+    # fitter.getDataFromDB()
     while True:
         analyzer.getLandingTimeToAirport()
         time.sleep(2)
