@@ -13,7 +13,7 @@ import time
 if __name__ == "__main__":
     analyzer = FR24Analyzer.FR24Analyzer()
     # fitter = fit.Fit()
-    # fitter.getDataFromDB()
+    # fitter.splitDataSet()
     while True:
         analyzer.getLandingTimeToAirport()
         time.sleep(2)
