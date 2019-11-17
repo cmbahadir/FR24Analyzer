@@ -8,13 +8,15 @@ from datetime import datetime
 
 class FR24Analyzer(object):
 
-    def __init__(self, configFile="config.yaml", logFile="log"):
+    def __init__(self, configFile="config.yaml", logFile="log", logging=True):
         self._hlp = helper.Helper()
         self.configFile = configFile
-        
-        #Set the log file and add titles to logfile
-        self.logFile = logFile
-        self._hlp.addTitleToLogFile(self.logFile)
+        self.logging = logging
+
+        if self.logging == True: #Ugly but fast solution for #7 Make logging optional Issue
+            #Set the log file and add titles to logfile
+            self.logFile = logFile
+            self._hlp.addTitleToLogFile(self.logFile)
 
         configParameters = self._hlp.readFromConfigFile(self.configFile)
         self.bounds = configParameters["bounds"]
@@ -58,7 +60,8 @@ class FR24Analyzer(object):
         redisInstance = store.store(self.redis_ip, self.redis_port,
                                     self.postgres_ip, self.postgres_port)
         airportCoordinates = [self.airportLat, self.airportLon]
-        f = open(self.logFile, 'a+')
+        if self.logging == True:
+            f = open(self.logFile, 'a+')
         for key in jsonObject:
                 if key not in ["version", "full_count", "stats"]:
                     value = jsonObject[key]
@@ -72,8 +75,9 @@ class FR24Analyzer(object):
                     _now = datetime.now()
                     _time = time.mktime(_now.timetuple())
                     distanceToAirport = str(self._hlp.calcDistanceFromAirport(value[1], value[2], airportCoordinates[0], airportCoordinates[1]))
-                    f.write(str(flight) + "," + str(lat) + "," + str(lon) + "," + str(hdg) +
-                            "," + str(alt) + "," + str(spd) + "," + str(_time) + "," + str(distanceToAirport) + "\n")
+                    if self.logging == True : 
+                        f.write(str(flight) + "," + str(lat) + "," + str(lon) + "," + str(hdg) +
+                                "," + str(alt) + "," + str(spd) + "," + str(_time) + "," + str(distanceToAirport) + "\n")
 
                     # Write to REDIS                            
                     flightData['lat'] = lat
@@ -87,4 +91,5 @@ class FR24Analyzer(object):
                     #TODO: Add check to here if the same flight is exist on the REDIS
                     # do not add and check if the al value 0 than add it with an extension
                     redisInstance.writeToRedis(flight, flightData)
-        f.close()
+        if self.logging == True :
+            f.close()

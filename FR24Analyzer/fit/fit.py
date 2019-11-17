@@ -22,27 +22,30 @@ class Fit(object):
         datasets = pd.read_csv(dataDB, sep=",")
         return datasets
     
-    def splitDataSet(self):
+    def __splitDataSet(self):
         datasets = self.__getDataFromDB()
         features = {"lat","lon","hdg","alt","speed","distance"}
-        X = datasets.iloc[:, [0,1,2,3,4,6]].values
-        Y = datasets.iloc[:, 5].values
-        
+        self.X = datasets.iloc[:, [0,1,2,3,4,6]].values
+        self.Y = datasets.iloc[:, 5].values
+    
+    def __selectTrainTestRows(self):
         from sklearn.model_selection import train_test_split
-        X_Train, X_Test, Y_Train, Y_Test = train_test_split(X, Y, test_size = 0.08, random_state = 0)
-        print("X_Test" + str(X_Test))
-        print("Y_Test" + str(Y_Test))
+        self.__splitDataSet()
+        self.X_Train, self.X_Test, self.Y_Train, self.Y_Test = train_test_split(self.X, self.Y, test_size = 0.08, random_state = 0)
 
+    def __standardizateData(self):
         from sklearn.preprocessing import StandardScaler
         sc_X = StandardScaler()
-        X_Train = sc_X.fit_transform(X_Train)
-        X_Test = sc_X.transform(X_Test)
+        self.__selectTrainTestRows()
+        self.X_Train_Standardized = sc_X.fit_transform(self.X_Train)
+        self.X_Test_Standardized = sc_X.transform(self.X_Test)
 
+    def fitData(self):
         from sklearn.ensemble import RandomForestRegressor
+        self.__standardizateData()
         regressor = RandomForestRegressor(n_estimators = 1000, max_depth=30, random_state = 0)
-        regressor.fit(X_Train,Y_Train)
-
-        Y_Pred = regressor.predict(X_Test)
+        regressor.fit(self.X_Train_Standardized, self.Y_Train)
+        Y_Pred = regressor.predict(self.X_Test_Standardized)
         print("Y_Predict" + str(Y_Pred))
 
 
