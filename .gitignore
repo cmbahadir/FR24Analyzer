@@ -4,3 +4,5 @@ toIST.xlsx
 __pycache__
 .pytest_cache
 .vscode
+*.pyc
+FR24Analyzer/store/store.pyc

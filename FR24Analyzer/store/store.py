@@ -117,4 +117,10 @@ class PostGreSQL():
                     "distance": float(dataDict[b'distance'].decode('utf-8'))
                  })
         self.__postgresql_connection.commit()
+    
+    def getFromDB(self):
+        query = "select * from saw"
+        self.__postgresql_cursor.execute(query)
+        flightRecords = self.__postgresql_cursor.fetchall()
+        return flightRecords
 
