@@ -20,7 +20,7 @@ Make sure that postgresql and redis are running and properly configured.
 ```
 python fr24Analyzer.py -g GET
 ```
-Logging is optional and can be triggered as below and starts to log to a filename named "log".
+Logging is optional and can be triggered as below and starts to log to a file named "log" under current directory.
 ```
 python fr24Analyzer.py -g GET -l LOG
 ```
