@@ -1,5 +1,6 @@
 from FR24Analyzer import FR24Analyzer
 from FR24Analyzer.fit import fit
+from FR24Analyzer.UI import MainWindow_FR24Analyzer
 import time
 import argparse
 
@@ -7,6 +8,7 @@ parser = argparse.ArgumentParser(description='Approach time analyzer with respec
 parser.add_argument('-f','--fit', help='Fit Instance',required=False)
 parser.add_argument('-g','--get',help='Get Instance', required=False)
 parser.add_argument('-l','--log', help='Logging to log file.', required=False)
+parser.add_argument('-u','--ui', help='Launch the GUI.', required=False)
 args = parser.parse_args()
 
 if __name__ == "__main__":
@@ -27,7 +29,11 @@ if __name__ == "__main__":
         fitter = fit.Fit()
         fitter.fitData()
 
+    elif args.ui != None:
+        MainWindow_FR24Analyzer.main()
+
     else:
-        print("Usage: \n Get: python fr24Analyzer.py - g \n" +
-              "Fit: python fr24Analyzer.py -f \n" + 
+        print("Usage: \n" +
+              "Get: python fr24Analyzer.py --get \n" +
+              "Fit: python fr24Analyzer.py --fit \n" +
               "Logging: -l LOG")
