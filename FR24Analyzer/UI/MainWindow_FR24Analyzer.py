@@ -64,6 +64,7 @@ class Window(QMainWindow):
         getPIDLinux = '$(ps -fu $USER | grep "GET" | grep "fr24Analyzer.py" | grep -v "grep" | awk \'{print $2}\')'
         subprocess.call("kill -9 " + getPIDLinux, shell=True)
         self.ui.getButton.setText("GET")
+        self.ui.getButton.pressed.connect(self.runGET)
 
     def onFinished(self, exitCode, exitStatus):
         self.ui.getButton.setText("GET")

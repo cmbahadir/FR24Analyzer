@@ -15,10 +15,18 @@ class Helper(object):
             configParameters["redis_port"] = config["redis_port"]
             configParameters["postgres_ip"] = config["postgres_ip"]
             configParameters["postgres_port"] = config["postgres_port"]
+            configFile.close()
             return configParameters
         except:
             return False
 
+    def writeToConfigFile(self, fileName, userConfiguration):
+        configParameters = dict()
+        try:
+            configFile = open(fileName, 'w')
+            yaml.dump(userConfiguration, configFile)
+        except:
+            return False
 
     def calcDistanceFromAirport(self, latPlane, lonPlane, latAirport, lonAirport):
         R = 6373.0
