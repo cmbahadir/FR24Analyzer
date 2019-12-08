@@ -4,17 +4,21 @@ import yaml
 class Helper(object):
     def readFromConfigFile(self, fileName):
         configParameters = dict()
-        configFile = open(fileName)
-        config = yaml.safe_load(configFile)
-        configParameters["bounds"] = config["bounds"]
-        configParameters["airportName"] = config["airportName"]
-        configParameters["airportLat"] = config["airportLat"]
-        configParameters["airportLon"] = config["airportLon"]
-        configParameters["redis_ip"] = config["redis_ip"]
-        configParameters["redis_port"] = config["redis_port"]
-        configParameters["postgres_ip"] = config["postgres_ip"]
-        configParameters["postgres_port"] = config["postgres_port"]
-        return configParameters
+        try:
+            configFile = open(fileName)
+            config = yaml.safe_load(configFile)
+            configParameters["bounds"] = config["bounds"]
+            configParameters["airportName"] = config["airportName"]
+            configParameters["airportLat"] = config["airportLat"]
+            configParameters["airportLon"] = config["airportLon"]
+            configParameters["redis_ip"] = config["redis_ip"]
+            configParameters["redis_port"] = config["redis_port"]
+            configParameters["postgres_ip"] = config["postgres_ip"]
+            configParameters["postgres_port"] = config["postgres_port"]
+            return configParameters
+        except:
+            return False
+
 
     def calcDistanceFromAirport(self, latPlane, lonPlane, latAirport, lonAirport):
         R = 6373.0
