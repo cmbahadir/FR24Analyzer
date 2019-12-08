@@ -31,7 +31,6 @@ class ConfigureDialog(QDialog):
             self.configureDialog.postgresIP.setText(str(self.configureParameters['postgres_ip']))
         
         self.configureDialog.configureBrowseButton.pressed.connect(self.browseMethod)
-        print("Debug")
     
     def browseMethod(self):
         browseDialog = QFileDialog(self)

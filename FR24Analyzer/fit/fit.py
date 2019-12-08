@@ -53,10 +53,8 @@ class Fit(object):
         regressor = RandomForestRegressor(n_estimators = 1000, max_depth=30, random_state = 0)
         regressor.fit(self.X_Train_Standardized, self.Y_Train)
         Y_Pred = regressor.predict(self.X_Test_Standardized)
+        return self.__returnTestFlight()[0], str(self.__returnTestFlight()[1]), str(Y_Pred[0])
 
-        print("Flight_Id: " + self.__returnTestFlight()[0])
-        print("Real_Approach_Time: " + str(self.__returnTestFlight()[1]))
-        print("Predicted_Approach_Time: " + str(Y_Pred[0]))
 
 
 
