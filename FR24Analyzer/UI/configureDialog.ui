@@ -211,6 +211,12 @@
                <height>29</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string extracomment="Aiport Name Text (&quot;GUW&quot;)"/>
+             </property>
+             <property name="whatsThis">
+              <string extracomment="Aiport Name Text (&quot;GUW&quot;)"/>
+             </property>
             </widget>
            </item>
            <item>
@@ -227,6 +233,12 @@
                <height>29</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string/>
+             </property>
+             <property name="whatsThis">
+              <string extracomment="Format (xx.yyyyyy)"/>
+             </property>
             </widget>
            </item>
            <item>
@@ -242,6 +254,12 @@
                <width>150</width>
                <height>29</height>
               </size>
+             </property>
+             <property name="toolTip">
+              <string/>
+             </property>
+             <property name="whatsThis">
+              <string extracomment="Format (xx.yyyyyy)"/>
              </property>
             </widget>
            </item>
@@ -334,6 +352,12 @@
              <height>29</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string/>
+           </property>
+           <property name="whatsThis">
+            <string extracomment="Area Lattitude (Lat,Lon)"/>
+           </property>
           </widget>
          </item>
          <item>
@@ -349,6 +373,12 @@
              <width>150</width>
              <height>29</height>
             </size>
+           </property>
+           <property name="toolTip">
+            <string/>
+           </property>
+           <property name="whatsThis">
+            <string extracomment="Area Longtitude (Lat,Lon)"/>
            </property>
           </widget>
          </item>
@@ -455,6 +485,12 @@
            <height>29</height>
           </size>
          </property>
+         <property name="toolTip">
+          <string/>
+         </property>
+         <property name="whatsThis">
+          <string extracomment="ip:port"/>
+         </property>
         </widget>
        </item>
        <item>
@@ -470,6 +506,12 @@
            <width>150</width>
            <height>29</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string/>
+         </property>
+         <property name="whatsThis">
+          <string extracomment="ip:port"/>
          </property>
         </widget>
        </item>

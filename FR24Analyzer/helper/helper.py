@@ -21,10 +21,22 @@ class Helper(object):
             return False
 
     def writeToConfigFile(self, fileName, userConfiguration):
-        configParameters = dict()
         try:
-            configFile = open(fileName, 'w')
-            yaml.dump(userConfiguration, configFile)
+            #Flush the file first
+            configFile = open(fileName, 'w+')
+            configFile.flush()
+            configFile.close()
+            #Write to config file
+            configFile = open(fileName, 'a+')
+            configFile.write("bounds : " + '"' + userConfiguration['bounds'] + '"' + '\n')
+            configFile.write("airportName : " + '"' + userConfiguration['airportName'] + '"' + '\n')
+            configFile.write("airportLat : " + userConfiguration['airportLat'] + '\n')
+            configFile.write("airportLon : " + userConfiguration['airportLon'] + '\n')
+            configFile.write("redis_ip : " + userConfiguration['redis_ip'] + '\n')
+            configFile.write("redis_port : " + userConfiguration['redis_port'] + '\n')
+            configFile.write("postgres_ip : " + userConfiguration['postgres_ip'] + '\n')
+            configFile.write("postgres_port : " + userConfiguration['postgres_port'])
+            configFile.close()
         except:
             return False
 
