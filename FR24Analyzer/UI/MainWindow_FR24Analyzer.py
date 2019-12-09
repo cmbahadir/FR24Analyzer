@@ -32,9 +32,9 @@ class Window(QMainWindow):
         self.rowCount = len(self.data)
         self.columnCount = len(self.data[:][1])
         self.ui.rowCount.setText("Number of Rows: " + str(self.rowCount))
-        self.ui.dbTable.setFont(self.font);
-        self.ui.dbTable.setRowCount(self.rowCount);
-        self.ui.dbTable.setColumnCount(self.columnCount);
+        self.ui.dbTable.setFont(self.font)
+        self.ui.dbTable.setRowCount(self.rowCount)
+        self.ui.dbTable.setColumnCount(self.columnCount)
         self.ui.dbTable.setHorizontalHeaderLabels(str("Flight;Lattitude;Longtitude;Heading;Altitude;Speed;Approach Time;Distance").split(";"))
         for row in range(0,self.rowCount):
             if highlight != None and str(self.data[row][0]) == highlight:
