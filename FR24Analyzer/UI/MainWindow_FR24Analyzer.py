@@ -32,10 +32,10 @@ class Window(QMainWindow):
         self.rowCount = len(self.data)
         self.columnCount = len(self.data[:][1])
         self.ui.rowCount.setText("Number of Rows: " + str(self.rowCount))
-        self.ui.dbTable.setFont(self.font);
-        self.ui.dbTable.setRowCount(self.rowCount);
-        self.ui.dbTable.setColumnCount(self.columnCount);
-        self.ui.dbTable.setHorizontalHeaderLabels(str("Flight;Lattitude;Longtitude;Heading;Altitude;Speed;ApproachTime;Distance").split(";"))
+        self.ui.dbTable.setFont(self.font)
+        self.ui.dbTable.setRowCount(self.rowCount)
+        self.ui.dbTable.setColumnCount(self.columnCount)
+        self.ui.dbTable.setHorizontalHeaderLabels(str("Flight;Lattitude;Longtitude;Heading;Altitude;Speed;Approach Time;Distance").split(";"))
         for row in range(0,self.rowCount):
             if highlight != None and str(self.data[row][0]) == highlight:
                 self.ui.dbTable.selectRow(row)
@@ -64,6 +64,7 @@ class Window(QMainWindow):
         getPIDLinux = '$(ps -fu $USER | grep "GET" | grep "fr24Analyzer.py" | grep -v "grep" | awk \'{print $2}\')'
         subprocess.call("kill -9 " + getPIDLinux, shell=True)
         self.ui.getButton.setText("GET")
+        self.ui.getButton.pressed.connect(self.runGET)
 
     def onFinished(self, exitCode, exitStatus):
         self.ui.getButton.setText("GET")
