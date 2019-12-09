@@ -8,7 +8,7 @@ class TestObject(object):
 
     @pytest.mark.parametrize("test_lat, test_lon,expected_distance", [(41.39, 28.69, 75.29753975122823), (40.44, 29.68, 59.91991319963786)])
     def test_calculate_distance_to_airport(self, test_lat, test_lon, expected_distance):
-        # Coordinates of the SAW airport
+        # Coordinates of the airport
         latAirport = 40.899876
         lonAirport = 29.310093
         distance = self.hlp.calcDistanceFromAirport(

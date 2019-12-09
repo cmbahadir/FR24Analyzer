@@ -24,13 +24,14 @@ class Window(QMainWindow):
         self.ui.fitButton.pressed.connect(self.runFIT)
 
         #Model Class
-        model = PostGreSQL()
-        self.data = model.getFromDB()
-        self.showData()
+        self.model = PostGreSQL()
+        self.data = self.model.getFromDB()
+        if len(self.data) != 0:
+            self.showData()
     
     def showData(self, highlight=None):
         self.rowCount = len(self.data)
-        self.columnCount = len(self.data[:][1])
+        self.columnCount = len(self.data[:][0])
         self.ui.rowCount.setText("Number of Rows: " + str(self.rowCount))
         self.ui.dbTable.setFont(self.font)
         self.ui.dbTable.setRowCount(self.rowCount)
@@ -60,11 +61,14 @@ class Window(QMainWindow):
         self.ui.getButton.pressed.connect(self.stopGET)
     
     def stopGET(self):
-        #TODO: Only reason why this program works only on Linux
+        #TODO: Here is the only reason for this program works only on Linux
         getPIDLinux = '$(ps -fu $USER | grep "GET" | grep "fr24Analyzer.py" | grep -v "grep" | awk \'{print $2}\')'
         subprocess.call("kill -9 " + getPIDLinux, shell=True)
         self.ui.getButton.setText("GET")
         self.ui.getButton.pressed.connect(self.runGET)
+        self.data = self.model.getFromDB()
+        if (len(self.data) != 0):
+            self.showData()
 
     def onFinished(self, exitCode, exitStatus):
         self.ui.getButton.setText("GET")
@@ -73,10 +77,13 @@ class Window(QMainWindow):
     def runFIT(self):
         fitter = fit.Fit()
         fittedResult = fitter.fitData()
-        self.showData(highlight=fittedResult[0])
-        self.ui.predFlight.setText(fittedResult[0])
-        self.ui.actApproach.setText(fittedResult[1])
-        self.ui.predApproach.setText(fittedResult[2])
+        if fittedResult == False:
+            self.ui.rowCount.setText("Not enough data to train.")
+        else:
+            self.showData(highlight=fittedResult[0])
+            self.ui.predFlight.setText(fittedResult[0])
+            self.ui.actApproach.setText(fittedResult[1])
+            self.ui.predApproach.setText(fittedResult[2])
 
 def main():
     app = QApplication(sys.argv)
