@@ -21,7 +21,7 @@ class Fit(object):
         dataDB = StringIO(dataDBCon)
         datasets = pd.read_csv(dataDB, sep=",")
         return datasets
-    
+        
     def __splitDataSet(self):
         datasets = self.__getDataFromDB()
         features = {"lat","lon","hdg","alt","speed","distance"}
@@ -47,13 +47,17 @@ class Fit(object):
                 return self.rows[i][0], self.rows[i][6]
         return
 
+    #Returns false if train model cannot be created properly.
     def fitData(self):
         from sklearn.ensemble import RandomForestRegressor
-        self.__standardizateData()
-        regressor = RandomForestRegressor(n_estimators = 1000, max_depth=30, random_state = 0)
-        regressor.fit(self.X_Train_Standardized, self.Y_Train)
-        Y_Pred = regressor.predict(self.X_Test_Standardized)
-        return self.__returnTestFlight()[0], str(self.__returnTestFlight()[1]), str(Y_Pred[0])
+        try:
+            self.__standardizateData()
+            regressor = RandomForestRegressor(n_estimators = 1000, max_depth=30, random_state = 0)
+            regressor.fit(self.X_Train_Standardized, self.Y_Train)
+            Y_Pred = regressor.predict(self.X_Test_Standardized)
+            return self.__returnTestFlight()[0], str(self.__returnTestFlight()[1]), str(Y_Pred[0])
+        except:
+            return False
 
 
 

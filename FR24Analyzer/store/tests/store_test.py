@@ -62,7 +62,7 @@ class Test_Store(object):
         self.storeInstance.writeFirstOccurence(test_flight, test_flight_dic_approaching)
         self.storeInstance.writeLandTime(test_flight, test_flight_dic_landing)
         self.storeInstance.updateTheHash(test_flight, test_flight_dic_landing)
-        self.postgres_Test_cursor.execute("select * from saw where flight='4BAAA10';")
+        self.postgres_Test_cursor.execute("select * from airport where flight='4BAAA10';")
         fetchedFlight = self.postgres_Test_cursor.fetchone()
         assert fetchedFlight[0] == test_flight
 
