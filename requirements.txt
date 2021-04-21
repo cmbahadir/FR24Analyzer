@@ -1,6 +1,6 @@
 redis==3.2.1
 requests==2.20.0
-PyYAML==5.1
+PyYAML==5.4
 pandas==0.24.2
 psycopg2==2.8.3
 
